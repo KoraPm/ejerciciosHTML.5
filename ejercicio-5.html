@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ejercicio-5</title>
+</head>
+<body>
+<script>    
+    if(navigator.geolocation) {
+        var posOptions = { enableHighAccuracy : true, timeout : Infinity, maximumAge : 65000 };
+        navigator.geolocation.getCurrentPosition(visitorLocation, getError, posOptions);
+        } else {
+        alert('Geolocation Api is not supported on this browser');
+        }
+        
+        function visitorLocation(position) {
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+        document.write('Latitude: '+lat+' and Longitude: '+long);
+        }
+        
+        function getError(error) {
+        switch(error.code) {
+        case error.PERMISSION_DENIED:
+            document.write("User denied the request for Geolocation.");
+            break;
+        case error.POSITION_UNAVAILABLE:
+            document.write("Location information is unavailable.");
+            break;
+        case error.TIMEOUT:
+            document.write("The request to get user location timed out.");
+            break;
+        case error.UNKNOWN_ERROR:
+            document.write("An unknown error occurred.");
+            break;
+        }
+        }
+        
+</script>
+
+
+
+<p>Count numbers: <output id="result"></output></p>
+<button onclick="startWorker()">Start Worker</button>
+<button onclick="stopWorker()">Stop Worker</button>
+
+<script>
+var w;
+
+function startWorker() {
+  if (typeof(Worker) !== "undefined") {
+    if (typeof(w) == "undefined") {
+      w = new Worker("demo_workers.js");
+    }
+    w.onmessage = function(event) {
+      document.getElementById("result").innerHTML = event.data;
+    };
+  } else {
+    document.getElementById("result").innerHTML = "Sorry! No Web Worker support.";
+  }
+}
+
+function stopWorker() {
+  w.terminate();
+  w = undefined;
+}
+</script>
+
+
+<canvas id="cnvs" width="250" height="150" style="border:1px solid #000000;">
+</canvas>
+<script>
+var canvas = document.getElementById('cnvs');
+var ctx = canvas.getContext("2d");
+ctx.fillStyle = 'red'; 
+ctx.fillRect(20, 20, 100, 100);
+</script>
+
+
+<style type="text/css">
+    #dropbox{
+        width: 150px; 
+        height: 150px;
+        border: 3px dashed #D3D3D3;
+        background: #FCFBE3; 
+        margin: 5px;
+    }
+    #dragimg{ margin: 5px; }
+    </style>		
+    <script>
+    function dragStart(e) {
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData("Text", e.target.getAttribute("id"));
+    }
+    function dragOver(e) {
+    e.preventDefault();
+    return false;
+    }
+    function drop(e){
+    e.preventDefault();
+    // Get the dragged data
+    var data = e.dataTransfer.getData("Text");
+    // Append dragged image to the box
+    e.target.appendChild(document.getElementById(data));
+    }
+    </script>
+    <div id="dropbox" ondragover="dragOver(event);" ondrop="drop(event);">
+    </div>
+    <img id="dragimg" src="https://clipartspub.com/images/pikachu-clipart-cute-1.jpg" draggable="true" 
+    ondragstart="dragStart(event);" />
+
+
+
+</body>
+</html>
